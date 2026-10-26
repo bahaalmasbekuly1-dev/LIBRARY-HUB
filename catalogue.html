@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book catalogue · Library Hub</title>
+  <script>
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem("libraryHub.theme"); } catch (e) {}
+      var dark = saved ? saved === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header"><div class="inner">
+    <a class="logo" href="index.html">Library Hub</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav class="main-nav" id="mainNav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="catalogue.html" aria-current="page">Books</a>
+      <a href="my-books.html">My Books</a>
+      <a href="events.html">Events</a>
+      <a href="announcements.html">Announcements</a>
+      <a href="librarian.html">Librarian</a>
+    </nav>
+    <div class="header-tools">
+      <label class="visually-hidden" for="studentSelect">Viewing as</label>
+      <select id="studentSelect" class="student-select"></select>
+      <button id="themeToggle" type="button">☾ Dark</button>
+    </div>
+  </div></header>
+
+  <main class="container">
+    <h1>Book catalogue</h1>
+    <p class="muted">Search by title, author, genre, or book ID.</p>
+
+    <div class="filters">
+      <div>
+        <label for="searchInput">Search</label>
+        <input id="searchInput" type="search" placeholder="e.g. Tolkien, 0412, Mystery">
+      </div>
+      <div>
+        <label for="genreFilter">Genre</label>
+        <select id="genreFilter"><option value="">All genres</option></select>
+      </div>
+      <div>
+        <label for="availabilityFilter">Availability</label>
+        <select id="availabilityFilter">
+          <option value="">Any</option>
+          <option value="available">Available</option>
+          <option value="reserved">Reserved</option>
+          <option value="borrowed">On loan</option>
+        </select>
+      </div>
+      <div>
+        <label for="sortSelect">Sort by</label>
+        <select id="sortSelect">
+          <option value="title">Title (A–Z)</option>
+          <option value="author">Author (A–Z)</option>
+          <option value="popularity">Most popular</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="result-count" id="resultCount" aria-live="polite"></p>
+    <div class="card-grid books" id="bookGrid"></div>
+    <p class="empty card" id="emptyState" hidden>No books match your search. Try a different word, or clear the filters.</p>
+  </main>
+
+  <dialog id="bookDialog" aria-labelledby="dialogTitle">
+    <button class="btn secondary close-btn" type="button" id="closeDialog">Close</button>
+    <div id="bookDetail"></div>
+  </dialog>
+
+  <footer class="site-footer"><div class="inner">
+    <div><strong>Library Hub</strong><br>School library prototype. Demo data only.</div>
+    <div><strong>Opening hours</strong><br>Mon–Fri, 08:00–17:00</div>
+    <div><strong>Contact</strong><br>Room 2.14 · library@school.example (placeholder)</div>
+  </div></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/catalogue.js"></script>
+</body>
+</html>

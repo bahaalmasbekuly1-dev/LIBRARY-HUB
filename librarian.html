@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Librarian dashboard · Library Hub</title>
+  <script>
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem("libraryHub.theme"); } catch (e) {}
+      var dark = saved ? saved === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header"><div class="inner">
+    <a class="logo" href="index.html">Library Hub</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav class="main-nav" id="mainNav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="catalogue.html">Books</a>
+      <a href="my-books.html">My Books</a>
+      <a href="events.html">Events</a>
+      <a href="announcements.html">Announcements</a>
+      <a href="librarian.html" aria-current="page">Librarian</a>
+    </nav>
+    <div class="header-tools">
+      <label class="visually-hidden" for="studentSelect">Viewing as</label>
+      <select id="studentSelect" class="student-select"></select>
+      <button id="themeToggle" type="button">☾ Dark</button>
+    </div>
+  </div></header>
+
+  <main class="container">
+    <h1>Librarian dashboard</h1>
+    <div class="notice warn">
+      <strong>Demo mode.</strong> There is no login in this prototype, so anyone who opens this page can use these tools. Do not enter real student data here. Real systems need secure authentication.
+      <div class="actions" style="margin-top:0.5rem;">
+        <button class="btn secondary small-btn" type="button" id="resetDemo">Reset demo data</button>
+      </div>
+    </div>
+
+    <!-- ===== Books ===== -->
+    <h2>Books</h2>
+    <div class="card">
+      <h3 id="bookFormTitle">Add a book</h3>
+      <p class="small muted">A random unique 4-digit ID is created for each new book.</p>
+      <form id="bookForm" novalidate>
+        <input type="hidden" id="bookEditId">
+        <div class="form-grid">
+          <div class="field"><label for="bookTitle">Title</label><input id="bookTitle" required></div>
+          <div class="field"><label for="bookAuthor">Author</label><input id="bookAuthor" required></div>
+          <div class="field"><label for="bookGenre">Genre</label><input id="bookGenre" list="genreOptions" required><datalist id="genreOptions"></datalist></div>
+          <div class="field"><label for="bookYear">Year</label><input id="bookYear" type="number" min="1450" max="2026" required></div>
+          <div class="field"><label for="bookShelf">Shelf code</label><input id="bookShelf" placeholder="e.g. A-07" required></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn primary" type="submit" id="bookSubmit">Add book</button>
+          <button class="btn secondary" type="button" id="bookCancelEdit" hidden>Cancel edit</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="table-wrap" style="margin-top:1rem;">
+      <table>
+        <thead><tr><th>ID</th><th>Title</th><th>Shelf</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="bookTable"></tbody>
+      </table>
+    </div>
+
+    <!-- ===== Records ===== -->
+    <h2>Reservations and borrowing records</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Book</th><th>Student</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody id="recordTable"></tbody>
+      </table>
+    </div>
+
+    <!-- ===== Announcements ===== -->
+    <h2>Announcements</h2>
+    <div class="card">
+      <h3>Publish an announcement</h3>
+      <form id="announcementForm" novalidate>
+        <div class="form-grid">
+          <div class="field"><label for="annTitle">Title</label><input id="annTitle" required></div>
+          <div class="field"><label for="annCategory">Category</label>
+            <select id="annCategory">
+              <option>New arrivals</option><option>Schedule</option><option>Reading challenge</option>
+              <option>Events</option><option>Library news</option><option>Reminders</option>
+            </select>
+          </div>
+          <div class="field"><label for="annPriority">Priority</label>
+            <select id="annPriority"><option value="normal">Normal</option><option value="high">Important</option></select>
+          </div>
+          <div class="field"><label for="annEvent">Related event (optional)</label>
+            <select id="annEvent"><option value="">None</option></select>
+          </div>
+        </div>
+        <div class="field"><label for="annSummary">Short summary</label><input id="annSummary" required></div>
+        <div class="field"><label for="annBody">Full description</label><textarea id="annBody"></textarea></div>
+        <div class="form-actions">
+          <button class="btn primary" type="submit">Publish</button>
+          <button class="btn secondary" type="button" id="annPreview">Preview email</button>
+        </div>
+      </form>
+
+      <h3 style="margin-top:1.25rem;">Email preview</h3>
+      <div class="preview" id="emailPreview" aria-live="polite">
+        <p class="muted">Use "Preview email" or "Publish" to see how the announcement email would look.</p>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:1rem;">
+      <table>
+        <thead><tr><th>Date</th><th>Title</th><th>Category</th><th>Priority</th><th>Actions</th></tr></thead>
+        <tbody id="announcementTable"></tbody>
+      </table>
+    </div>
+
+    <!-- ===== Events ===== -->
+    <h2>Events</h2>
+    <div class="card">
+      <h3>Create an event</h3>
+      <form id="eventForm" novalidate>
+        <div class="form-grid">
+          <div class="field"><label for="evTitle">Title</label><input id="evTitle" required></div>
+          <div class="field"><label for="evDate">Date</label><input id="evDate" type="date" required></div>
+          <div class="field"><label for="evStart">Start time</label><input id="evStart" type="time" required></div>
+          <div class="field"><label for="evEnd">End time</label><input id="evEnd" type="time" required></div>
+          <div class="field"><label for="evLocation">Location</label><input id="evLocation" required></div>
+          <div class="field"><label for="evCategory">Category</label><input id="evCategory" value="Workshop"></div>
+          <div class="field"><label for="evOrganizer">Organizer</label><input id="evOrganizer" value="School Librarian"></div>
+          <div class="field"><label for="evCapacity">Capacity</label><input id="evCapacity" type="number" min="1" value="12" required></div>
+        </div>
+        <div class="field"><label for="evDescription">Description</label><textarea id="evDescription"></textarea></div>
+        <div class="form-actions"><button class="btn primary" type="submit">Publish event</button></div>
+      </form>
+    </div>
+
+    <div class="table-wrap" style="margin-top:1rem;">
+      <table>
+        <thead><tr><th>Event</th><th>Date</th><th>Registered</th><th>Capacity</th><th>Who is registered</th><th>Actions</th></tr></thead>
+        <tbody id="eventTable"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="inner">
+    <div><strong>Library Hub</strong><br>School library prototype. Demo data only.</div>
+    <div><strong>Opening hours</strong><br>Mon–Fri, 08:00–17:00</div>
+    <div><strong>Contact</strong><br>Room 2.14 · library@school.example (placeholder)</div>
+  </div></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/librarian.js"></script>
+</body>
+</html>

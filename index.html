@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home · Library Hub</title>
+  <script>
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem("libraryHub.theme"); } catch (e) {}
+      var dark = saved ? saved === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="visually-hidden" href="#main">Skip to content</a>
+  <header class="site-header"><div class="inner">
+    <a class="logo" href="index.html">Library Hub</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav class="main-nav" id="mainNav" aria-label="Main">
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="catalogue.html">Books</a>
+      <a href="my-books.html">My Books</a>
+      <a href="events.html">Events</a>
+      <a href="announcements.html">Announcements</a>
+      <a href="librarian.html">Librarian</a>
+    </nav>
+    <div class="header-tools">
+      <label class="visually-hidden" for="studentSelect">Viewing as</label>
+      <select id="studentSelect" class="student-select"></select>
+      <button id="themeToggle" type="button">☾ Dark</button>
+    </div>
+  </div></header>
+
+  <main id="main" class="container">
+    <section class="card hero">
+      <p class="eyebrow">Open today</p>
+      <h1>Find your next read.</h1>
+      <p>Search books, reserve your favourites, and keep up with library events.</p>
+      <form id="heroSearch" class="search-form" role="search">
+        <label class="visually-hidden" for="heroQuery">Search books</label>
+        <input id="heroQuery" type="search" placeholder="Search by title, author, genre, or book ID…">
+        <button class="btn primary" type="submit">Search</button>
+      </form>
+      <div class="quick-links">
+        <a class="btn secondary" href="catalogue.html">Browse catalogue</a>
+        <a class="btn secondary" href="my-books.html">My Books</a>
+        <a class="btn secondary" href="events.html">Events</a>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="Library at a glance">
+      <div class="card stat"><span class="stat-value" id="statBooks">–</span><span class="muted">Books in catalogue</span></div>
+      <div class="card stat sage-bg"><span class="stat-value" id="statAvailable">–</span><span>Available now</span></div>
+      <div class="card stat amber-bg"><span class="stat-value" id="statEvents">–</span><span>Upcoming events</span></div>
+      <div class="card stat"><span class="stat-value" id="statUnread">–</span><span class="muted">Unread announcements</span></div>
+    </section>
+
+    <div class="section-head"><h2>Announcements</h2><a href="announcements.html">See all</a></div>
+    <div class="card-grid" id="homeAnnouncements"></div>
+
+    <div class="section-head"><h2>Upcoming events</h2><a href="events.html">See all</a></div>
+    <div class="card-grid" id="homeEvents"></div>
+
+    <div class="section-head"><h2>Popular books</h2><a href="catalogue.html">Browse all</a></div>
+    <div class="card-grid books" id="homeBooks"></div>
+  </main>
+
+  <footer class="site-footer"><div class="inner">
+    <div><strong>Library Hub</strong><br>School library prototype. Demo data only.</div>
+    <div><strong>Opening hours</strong><br>Mon–Fri, 08:00–17:00</div>
+    <div><strong>Contact</strong><br>Room 2.14 · library@school.example (placeholder)</div>
+  </div></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>
